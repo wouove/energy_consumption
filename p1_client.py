@@ -93,16 +93,51 @@ class P1client:
             # p1_line = ''
             try:
                 p1_raw = self.serial_object.readline()
+                # p1_str = str(p1_raw)
+                # print(f"p1_raw: {p1_str}")
+                # p1_line = p1_str.strip()
+                p1_line = p1_raw.decode('ascii').strip()
+                print(f"p1_line: {p1_line}")
+                stack.append(p1_line)
+                p1_counter = p1_counter + 1
             except Exception as e:
                 log.error(e)
                 log.error(f"Serial port {self.serial_object.name} can’t be read. Program stopped.")
-            p1_str = str(p1_raw)
-            p1_line = p1_str.strip()
-            stack.append(p1_line)
-            p1_counter = p1_counter + 1
 
-        regex = re.compile(r'24.2.1')
+        # regex = re.compile(r'24.2.1')
+        # selected_row = list(filter(regex.search, stack))
+        # print(f"selected_row: {selected_row}")
+        # measurement_value = float(selected_row[0][28:37])  # change these indices
+        # return measurement_value
 
-        selected_row = list(filter(regex.search, stack))
-        measurement_value = float(selected_row[0][28:37])  # change these indices
-        return measurement_value
+        watt = []
+        for ser_data in stack:
+            if re.match(r'(?=1-0:1.7.0)', ser_data):  # 1-0:1.7.0 = Actual usage in kW
+                kw = ser_data[10:-4]  # Knip het kW gedeelte eruit (0000.54)
+                # vermengvuldig met 1000 voor conversie naar Watt (540.0) en rond het af
+                watt.append(int(float(kw) * 1000))
+                print(watt)
+
+            if re.match(r'(?=1-0:1.8.1)', ser_data):
+                consumption_1 = ser_data[10:-5]
+                print(consumption_1)
+
+            if re.match(r'(?=1-0:1.8.2)', ser_data):
+                consumption_2 = ser_data[10:-5]
+                print(consumption_2)
+
+            if re.match(r'(?=1-0:2.8.1)', ser_data):
+                return_1 = ser_data[10:-5]
+                print(return_1)
+
+            if re.match(r'(?=1-0:2.8.2)', ser_data):
+                return_2 = ser_data[10:-5]
+                print(return_2)
+
+            # return [watt, consumption_1, consumption_2, return_1, return_2]
+
+
+if __name__ == '__main__':
+    p = P1client()
+    p.read_p1_connection()
+    # print(energy)
