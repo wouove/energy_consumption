@@ -68,8 +68,10 @@ class P1client:
 
     @staticmethod
     def parse_signal(stack):
+        print(f'stack_data: {stack}')
         measurement_dict = {}
         for ser_data in stack:
+            print(f'ser_data: {ser_data}')
             if re.match(r'(?=1-0:1.7.0)', ser_data):  # 1-0:1.7.0 = Actual usage in kW
                 kw = ser_data[10:-4]  # Knip het kW gedeelte eruit (0000.54)
                 # vermengvuldig met 1000 voor conversie naar Watt (540.0) en rond het af
@@ -78,21 +80,21 @@ class P1client:
             if re.match(r'(?=1-0:1.8.1)', ser_data):
                 consumption_1 = ser_data[10:-5]
                 measurement_dict['consumption_low'] = consumption_1
-                print(consumption_1)
+                print(f'consumption_1: {consumption_1}')
 
             if re.match(r'(?=1-0:1.8.2)', ser_data):
                 consumption_2 = ser_data[10:-5]
                 measurement_dict['consumption_high'] = consumption_2
-                print(consumption_2)
+                print(f'consumption_2: {consumption_2}')
 
             if re.match(r'(?=1-0:2.8.1)', ser_data):
                 production_1 = ser_data[10:-5]
                 measurement_dict['production_low'] = production_1
-                print(production_1)
+                print(f'production_1: {production_1}')
 
             if re.match(r'(?=1-0:2.8.2)', ser_data):
                 production_2 = ser_data[10:-5]
                 measurement_dict['production_high'] = production_2
-                print(production_2)
-
-            return pd.DataFrame(measurement_dict, index=[0])
+                print(f'production_2: {production_2}')
+        print(measurement_dict)
+        return pd.DataFrame(measurement_dict, index=[0])
