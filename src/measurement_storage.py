@@ -18,7 +18,7 @@ class MeasurementStorer:
 class CsvSaver:
     def __init__(self):
         self.filepath = '/home/pi/python-projects/energy_consumption/src/'
-        self.file = 'energy_measurement_data.csv'
+        self.file = 'energy_measurement_data_house_2.csv'
 
     def store_measurement(self, df):
         previous_data_df = self._open_file()
