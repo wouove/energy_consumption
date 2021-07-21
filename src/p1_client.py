@@ -78,23 +78,28 @@ class P1client:
                 watt = int(float(kw) * 1000)
 
             if re.match(r'(?=1-0:1.8.1)', ser_data):
-                consumption_1 = ser_data[10:-5]
-                measurement_dict['consumption_low'] = consumption_1
-                print(f'consumption_1: {consumption_1}')
+                electricity_consumption_1 = ser_data[10:-5]
+                measurement_dict['electricity_consumption_low'] = electricity_consumption_1
+                print(f'electricity_consumption_1: {electricity_consumption_1}')
 
             if re.match(r'(?=1-0:1.8.2)', ser_data):
-                consumption_2 = ser_data[10:-5]
-                measurement_dict['consumption_high'] = consumption_2
-                print(f'consumption_2: {consumption_2}')
+                electricity_consumption_2 = ser_data[10:-5]
+                measurement_dict['electricity_consumption_high'] = electricity_consumption_2
+                print(f'electricity_consumption_2: {electricity_consumption_2}')
 
             if re.match(r'(?=1-0:2.8.1)', ser_data):
-                production_1 = ser_data[10:-5]
-                measurement_dict['production_low'] = production_1
-                print(f'production_1: {production_1}')
+                electricity_production_1 = ser_data[10:-5]
+                measurement_dict['electricity_production_low'] = electricity_production_1
+                print(f'electricity_production_1: {electricity_production_1}')
 
             if re.match(r'(?=1-0:2.8.2)', ser_data):
-                production_2 = ser_data[10:-5]
-                measurement_dict['production_high'] = production_2
-                print(f'production_2: {production_2}')
+                electricity_production_2 = ser_data[10:-5]
+                measurement_dict['electricity_production_high'] = electricity_production_2
+                print(f'electricity_production_2: {electricity_production_2}')
+
+            if re.match(r'(?=0-1:24.2.1)', ser_data):
+                gas_consumption = ser_data[26:-4]
+                measurement_dict['gas_consumption'] = gas_consumption
+                print(f'gas_consumption: {gas_consumption}')
         print(measurement_dict)
         return pd.DataFrame(measurement_dict, index=[0])
