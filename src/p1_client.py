@@ -33,9 +33,9 @@ class P1client:
     def read_p1_connection(self):
         self.open_serial_connection()
         raw_data = self.read_signal()
-        measurement_df = self.parse_signal(raw_data)
+        measurement_df, measurement_dict = self.parse_signal(raw_data)
         self.close_serial_connection()
-        return measurement_df
+        return measurement_df, measurement_dict
 
     def open_serial_connection(self):
         try:
@@ -72,10 +72,6 @@ class P1client:
         measurement_dict = {}
         for ser_data in stack:
             print(f'ser_data: {ser_data}')
-            if re.match(r'(?=1-0:1.7.0)', ser_data):  # 1-0:1.7.0 = Actual usage in kW
-                kw = ser_data[10:-4]  # Knip het kW gedeelte eruit (0000.54)
-                # vermengvuldig met 1000 voor conversie naar Watt (540.0) en rond het af
-                watt = int(float(kw) * 1000)
 
             if re.match(r'(?=1-0:1.8.1)', ser_data):
                 electricity_consumption_1 = ser_data[10:-5]
@@ -101,5 +97,12 @@ class P1client:
                 gas_consumption = ser_data[26:-4]
                 measurement_dict['gas_consumption'] = gas_consumption
                 print(f'gas_consumption: {gas_consumption}')
+
+            if re.match(r'(?=1-0:1.7.0)', ser_data):  # 1-0:1.7.0 = Actual usage in kW
+                kw = ser_data[10:-4]  # Knip het kW gedeelte eruit (0000.54)
+                # vermengvuldig met 1000 voor conversie naar Watt (540.0) en rond het af
+                watt = int(float(kw) * 1000)
+                measurement_dict['current_electricity_consumption'] = watt
+
         print(measurement_dict)
-        return pd.DataFrame(measurement_dict, index=[0])
+        return pd.DataFrame(measurement_dict, index=[0]), measurement_dict

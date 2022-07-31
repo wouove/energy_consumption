@@ -131,3 +131,6 @@ dmypy.json
 # Other
 energy_consumption_backlog.txt
 cicd/
+
+#IDE
+.idea/
