@@ -75,27 +75,27 @@ class P1client:
 
             if re.match(r'(?=1-0:1.8.1)', ser_data):
                 electricity_consumption_1 = ser_data[10:-5]
-                measurement_dict['electricity_consumption_low'] = electricity_consumption_1
+                measurement_dict['electricity_consumption_low'] = float(electricity_consumption_1)
                 print(f'electricity_consumption_1: {electricity_consumption_1}')
 
             if re.match(r'(?=1-0:1.8.2)', ser_data):
                 electricity_consumption_2 = ser_data[10:-5]
-                measurement_dict['electricity_consumption_high'] = electricity_consumption_2
+                measurement_dict['electricity_consumption_high'] = float(electricity_consumption_2)
                 print(f'electricity_consumption_2: {electricity_consumption_2}')
 
             if re.match(r'(?=1-0:2.8.1)', ser_data):
                 electricity_production_1 = ser_data[10:-5]
-                measurement_dict['electricity_production_low'] = electricity_production_1
+                measurement_dict['electricity_production_low'] = float(electricity_production_1)
                 print(f'electricity_production_1: {electricity_production_1}')
 
             if re.match(r'(?=1-0:2.8.2)', ser_data):
                 electricity_production_2 = ser_data[10:-5]
-                measurement_dict['electricity_production_high'] = electricity_production_2
+                measurement_dict['electricity_production_high'] = float(electricity_production_2)
                 print(f'electricity_production_2: {electricity_production_2}')
 
             if re.match(r'(?=0-1:24.2.1)', ser_data):
                 gas_consumption = ser_data[26:-4]
-                measurement_dict['gas_consumption'] = gas_consumption
+                measurement_dict['gas_consumption'] = float(gas_consumption)
                 print(f'gas_consumption: {gas_consumption}')
 
             if re.match(r'(?=1-0:1.7.0)', ser_data):  # 1-0:1.7.0 = Actual usage in kW

@@ -1,3 +1,4 @@
+import pprint
 import sys
 import datetime
 import time
@@ -56,26 +57,17 @@ class InfluxdbClient:
                 return True
         return False
 
-    def store_measurement(self, measurement):
-        '''insert dummy measurements to the db.
-        nmeas = 0 means : insert measurements forever.
+    def store_measurement(self, measurement: dict, timestamp: datetime.datetime):
+        '''insert measurements to the db.
         '''
-        i = 0
-        if nmeas == 0:
-            nmeas = sys.maxsize
-        for i in range(nmeas):
-            x = i / 10.
-            y = math.sin(x)
-            data = [{
-                'measurement': measurement,
-                'time': datetime.datetime.now(),
-                'tags': {
-                    'x': x
-                },
-                'fields': {
-                    'y': y
-                },
-            }]
-            client.write_points(data)
-            pprint.pprint(data)
-            time.sleep(1)
+        data = [{
+            'measurement': MEASUREMENT,
+            'time': timestamp,
+            'tags': {
+            },
+            'fields': measurement,
+        }]
+        print(type(measurement["electricity_consumption_high"]))
+        client.write_points(data)
+        pprint.pprint(data)
+        client.close()
